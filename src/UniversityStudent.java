@@ -3,7 +3,7 @@ import java.util.*;
 
 
 public class UniversityStudent extends Student {
-    // TODO: Constructor and additional methods to be implemented
+    // TODO: Constructor and additional methods to be implemented 
     
     public String getName(){ 
         return name; 
@@ -33,12 +33,25 @@ public class UniversityStudent extends Student {
         return (ArrayList<String>) previousInternships; 
     }
 
+    private UniversityStudent roommate;
+
+    public UniversityStudent getRoommate() {
+        return roommate;
+    }
+
+    public void setRoommate(UniversityStudent roommate) {
+        this.roommate = roommate;
+    }
+
     @Override
     public int calculateConnectionStrength(Student other) {
         // TODO: Implement the connection strength logic
         return 0;
     }
-
+ 
+    public void setRoommateName(String name){ 
+        this.name = name; 
+    }
     public void setName(String name) {
         this.name = name;
     }
