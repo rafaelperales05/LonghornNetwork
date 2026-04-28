@@ -3,6 +3,34 @@ import java.util.*;
 import java.util.concurrent.*;
 
 public class UniversityStudent extends Student {
+    public UniversityStudent() {
+        this.roommatePreferences = new ArrayList<>();
+        this.previousInternships = new ArrayList<>();
+    }
+
+    public UniversityStudent(
+            String name,
+            int age,
+            String gender,
+            int year,
+            String major,
+            double gpa,
+            List<String> roommatePreferences,
+            List<String> previousInternships
+    ) {
+        this.name = name;
+        this.age = age;
+        this.gender = gender;
+        this.year = year;
+        this.major = major;
+        this.gpa = gpa;
+        this.roommatePreferences = roommatePreferences != null
+                ? new ArrayList<>(roommatePreferences)
+                : new ArrayList<>();
+        this.previousInternships = previousInternships != null
+                ? new ArrayList<>(previousInternships)
+                : new ArrayList<>();
+    }
     
     public String getName(){ 
         return name; 
@@ -141,6 +169,21 @@ public class UniversityStudent extends Student {
         } else {
             this.previousInternships = new ArrayList<>();
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Student:\n");
+        sb.append("Name: ").append(name).append("\n");
+        sb.append("Age: ").append(age).append("\n");
+        sb.append("Gender: ").append(gender).append("\n");
+        sb.append("Year: ").append(year).append("\n");
+        sb.append("Major: ").append(major).append("\n");
+        sb.append("GPA: ").append(gpa).append("\n");
+        sb.append("RoommatePreferences: ").append(roommatePreferences).append("\n");
+        sb.append("PreviousInternships: ").append(previousInternships).append("\n");
+        return sb.toString();
     }
 }
 

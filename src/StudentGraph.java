@@ -88,6 +88,32 @@ public class StudentGraph {
         return new ArrayList<>(nodes); 
     }
 
+    public void displayGraph() {
+        for (UniversityStudent student : nodes) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(student.getName()).append(" -> ");
+            ArrayList<Edge> edges = adjList.get(student);
+            if (edges == null || edges.isEmpty()) {
+                sb.append("[]");
+            } else {
+                sb.append("[");
+                for (int i = 0; i < edges.size(); i++) {
+                    Edge edge = edges.get(i);
+                    sb.append("(")
+                        .append(edge.neighbor.getName())
+                        .append(", ")
+                        .append(edge.weight)
+                        .append(")");
+                    if (i < edges.size() - 1) {
+                        sb.append(", ");
+                    }
+                }
+                sb.append("]");
+            }
+            System.out.println(sb);
+        }
+    }
+
     private boolean hasEdge(UniversityStudent u, UniversityStudent v) {
         ArrayList<Edge> neighbors = adjList.get(u);
         if (neighbors == null) {
