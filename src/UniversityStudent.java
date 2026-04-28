@@ -1,9 +1,8 @@
 
 import java.util.*;
-
+import java.util.concurrent.*;
 
 public class UniversityStudent extends Student {
-    // TODO: Constructor and additional methods to be implemented 
     
     public String getName(){ 
         return name; 
@@ -35,6 +34,27 @@ public class UniversityStudent extends Student {
 
     private UniversityStudent roommate;
 
+    // Concurrency components
+    private Set<UniversityStudent> friends = ConcurrentHashMap.newKeySet();
+    private Map<UniversityStudent, List<String>> chatHistory = new ConcurrentHashMap<>();
+
+    public void addFriend(UniversityStudent friend) {
+        friends.add(friend);
+    }
+
+    public Set<UniversityStudent> getFriends() {
+        return friends;
+    }
+
+    public synchronized void addChatMessage(UniversityStudent other, String message) {
+        chatHistory.putIfAbsent(other, new ArrayList<>());
+        chatHistory.get(other).add(message);
+    }
+
+    public synchronized List<String> getChatHistory(UniversityStudent other) {
+        return chatHistory.containsKey(other) ? new ArrayList<>(chatHistory.get(other)) : new ArrayList<>();
+    }
+
     public UniversityStudent getRoommate() {
         return roommate;
     }
@@ -45,8 +65,39 @@ public class UniversityStudent extends Student {
 
     @Override
     public int calculateConnectionStrength(Student other) {
-        // TODO: Implement the connection strength logic
-        return 0;
+        int total = 0; 
+
+        if (other instanceof UniversityStudent) { 
+            UniversityStudent otherStudent = (UniversityStudent) other; 
+
+            //check if roomates  
+            if (this.roommate != null && this.roommate.equals(otherStudent) ){ 
+                total += 4; 
+            }
+
+            // check if shared internships    
+            ArrayList<String> sharedInternships = otherStudent.getPreviousInternships(); 
+            for (String internship : this.previousInternships){  
+
+                if (sharedInternships.contains(internship)){ 
+                    total += 3; 
+                }
+            }
+
+
+            // check if same major  
+            if (this.getMajor().equals(otherStudent.getMajor())){ 
+                total += 2; 
+            }
+
+            // check if same age 
+            if (this.getAge() == otherStudent.getAge()){ 
+                total += 1; 
+            }
+
+        } 
+
+        return total;
     }
  
     public void setRoommateName(String name){ 
