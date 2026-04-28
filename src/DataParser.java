@@ -15,7 +15,7 @@ public class DataParser {
             while(scanner.hasNextLine()){ 
                 String line = scanner.nextLine().trim();  
                 
-                if (line.isEmpty()){  
+                if (line.isEmpty() || line.startsWith("Student:")){  
                     if (!CurrStudentLines.isEmpty()){ 
                         UniversityStudent s = parseSingleStudent(CurrStudentLines);
                         if (s != null) {
@@ -23,17 +23,19 @@ public class DataParser {
                         }
                         CurrStudentLines.clear(); 
                     }
+                    if (line.startsWith("Student:")) {
+                        CurrStudentLines.add(line);
+                    }
                 } else { 
                     CurrStudentLines.add(line); 
                 } 
-                
-                // If there are no more lines left in the file, process the last student!
-                if (!scanner.hasNextLine() && !CurrStudentLines.isEmpty()) {
-                    UniversityStudent s = parseSingleStudent(CurrStudentLines);
-                    if (s != null) {
-                        students.add(s); 
-                    }
-                    CurrStudentLines.clear(); 
+            }
+            
+            // If there are no more lines left in the file, process the last student!
+            if (!CurrStudentLines.isEmpty()) {
+                UniversityStudent s = parseSingleStudent(CurrStudentLines);
+                if (s != null) {
+                    students.add(s); 
                 }
             }
             return students;

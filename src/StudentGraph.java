@@ -28,16 +28,23 @@ public class StudentGraph {
      * @param students
      */
     public StudentGraph(List<UniversityStudent> students){  
+        if (students == null) {
+            throw new IllegalArgumentException("students list cannot be null");
+        }
   
         adjList = new HashMap<>();  
-        nodes = new ArrayList<>(students); 
-        for(UniversityStudent Student : students){ 
-            // key is student, value is new array 
-            if (!adjList.containsKey(Student)){
-                adjList.put(Student, new ArrayList<>()); 
+        nodes = new ArrayList<>();
+        for (UniversityStudent student : students){ 
+            if (student == null) {
+                continue;
+            }
+            if (!adjList.containsKey(student)){
+                adjList.put(student, new ArrayList<>()); 
+                nodes.add(student);
             }
 
-        }  
+        }   
+        buildGraph(); 
 
     } 
 
@@ -53,6 +60,9 @@ public class StudentGraph {
         if (!adjList.containsKey(u) || !adjList.containsKey(v)){ 
             return false; 
         }
+        if (hasEdge(u, v)) {
+            return false;
+        }
         
         // add edge on both students 
         adjList.get(u).add(new Edge(v, weight)); 
@@ -66,22 +76,47 @@ public class StudentGraph {
      * @param u - Student/node 
      * @return ArrayList of edges 
      */
-    private ArrayList<Edge> getNeighbors(UniversityStudent u){ 
-        return adjList.get(u); 
+    public ArrayList<Edge> getNeighbors(UniversityStudent u){ 
+        ArrayList<Edge> neighbors = adjList.get(u);
+        return neighbors != null ? neighbors : new ArrayList<>();
     }  
 
     /**
      * Return list of Universitystudents
      */
-    private ArrayList<UniversityStudent> getAllNodes(){ 
-        return nodes; 
+    public ArrayList<UniversityStudent> getAllNodes(){ 
+        return new ArrayList<>(nodes); 
+    }
+
+    private boolean hasEdge(UniversityStudent u, UniversityStudent v) {
+        ArrayList<Edge> neighbors = adjList.get(u);
+        if (neighbors == null) {
+            return false;
+        }
+        for (Edge edge : neighbors) {
+            if (edge.neighbor.equals(v)) {
+                return true;
+            }
+        }
+        return false;
     }
     
-
-
-
-
-
+    private void buildGraph(){ 
+        for (ArrayList<Edge> edges : adjList.values()) {
+            edges.clear();
+        }
+        // Add each undirected edge once by iterating upper triangle.
+        for (int i = 0; i < nodes.size(); i++) {
+            UniversityStudent u = nodes.get(i);
+            for (int j = i + 1; j < nodes.size(); j++) {
+                UniversityStudent v = nodes.get(j);
+                int weight = u.calculateConnectionStrength(v);
+                if (weight > 0) {
+                    addEdge(u, v, weight);
+                }
+            }
+        }
+    }
 
 
 }
